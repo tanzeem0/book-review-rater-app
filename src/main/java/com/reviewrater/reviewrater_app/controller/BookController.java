@@ -3,7 +3,11 @@ package com.reviewrater.reviewrater_app.controller;
 import com.reviewrater.reviewrater_app.model.Book;
 import com.reviewrater.reviewrater_app.services.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -38,4 +42,9 @@ public class BookController {
         return bookService.greetCurrentUser(user);
     }
 
+    @GetMapping("/{id}/summary")
+    public String getBookSummary(@PathVariable long id)
+    {
+        return bookService.getBookSummary(id);
+    }
 }

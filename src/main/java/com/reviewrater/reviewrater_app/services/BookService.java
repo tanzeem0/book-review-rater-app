@@ -13,4 +13,6 @@ public interface BookService {
     List<Book> getAllBooks(String author,String genre);
 
     String greetCurrentUser(String user);
+
+    String getBookSummary(long id);
 }

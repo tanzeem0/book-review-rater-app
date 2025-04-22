@@ -1,7 +1,11 @@
 package com.reviewrater.reviewrater_app.services;
 
 import com.reviewrater.reviewrater_app.model.Book;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,9 +14,15 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class BookServiceImpl  implements BookService {
 
     List<Book> books = new ArrayList<>();
+
+    private final RestTemplate restTemplate;
+
+    @Value("${book.api.url}")
+    private String baseUrl;
 
     @Override
     public Book saveBook(Book book) {
@@ -37,5 +47,14 @@ public class BookServiceImpl  implements BookService {
     @Override
     public String greetCurrentUser(String user) {
         return "Hello, " + user + "!" + " Welcome to ReviewRater";
+    }
+
+    @Override
+    public String getBookSummary(long id) {
+        ResponseEntity<Book> response = restTemplate.getForEntity(baseUrl+ id,Book.class);
+        Book book = response.getBody();
+        if(response.getBody() != null)
+            return "The book " + book.getTitle() + " by " + book.getAuthor() + " is a " + book.getGenre() + " book with a rating of " + book.getRating();
+        return "Book not found";
     }
 }
